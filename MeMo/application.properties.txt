@@ -1,0 +1,26 @@
+# アプリケーションが使用するデータベースのURL
+spring.datasource.url=jdbc:postgresql://localhost:5432/tododb
+# ↑ PostgreSQLのDBに接続するためのURL
+
+
+# データベース接続に使うユーザー名
+spring.datasource.username=postgres
+
+
+# データベース接続に使うパスワード
+spring.datasource.password=your_password
+
+
+# JPA（Hibernate）のDBスキーマ自動生成設定?
+spring.jpa.hibernate.ddl-auto=update
+# ↑ テーブル構成を自動で作成・更新してくれる
+
+
+# 実行されるSQLをログに表示 (でばっぐとか
+spring.jpa.show-sql=true
+# ↑ SQL文（SELECT、INSERTなど）をコンソールに出力してくれる
+
+
+# Thymeleafのテンプレートキャッシュを無効化？？
+spring.thymeleaf.cache=false
+# ↑ HTMLを変更しても即反映されるようにする設定

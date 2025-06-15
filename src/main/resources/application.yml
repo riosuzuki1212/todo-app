@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/todo_db
+    username: todo_user
+    password: ss1212
+  jpa:
+    hibernate:
+      ddl-auto: update  # 自動でテーブルを作成・更新
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: 8080
