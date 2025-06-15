@@ -192,6 +192,20 @@ JAVAのクラスは構造体みたいなもの？
 エンティティ（entity）とは、実体、存在、実在(物)、本質、本体などの意味を持つ英単語。
  ITの分野では、何らかの標識や識別名、所在情報によって指し示される、独立した一意の対象物をエンティティということが多い。
 
+Controllerのイメージ
+[ ユーザー ]
+   ↓ クリック・入力
+[ Controller ]
+   ↓ 処理を依頼
+[ Service（ロジック） ]
+   ↓ データ取得・計算
+[ Repository（DB） ]
+   ↓ 結果
+[ Controller ]
+   ↓ レスポンス返す
+[ ユーザー ]
+
+
 
  JpaRepository とは
 Spring Data JPA が提供している「データベース操作の共通機能」をまとめたインターフェース。
@@ -263,3 +277,17 @@ SQLビューが外部での設計図であると考えればわかりやすい�
 
 Java基礎まとめ(基礎構文)
 https://qiita.com/sukeqiita/items/37155fc150cf9e942207
+
+
+Spring Boot ってなに？
+JavaでWebアプリを簡単に作れるフレームワーク
+作法	　　　　　　　　内容
+① パッケージ分け	controller / service / repositoryなどに分ける
+② Controller	　　　　リクエストを受ける（処理はしない）
+③ Service	　　　　ロジックをまとめる
+④ Repository	　　　　データベースとのやり取り
+⑤ Entity	　　　　テーブルの形をJavaで表す
+⑥ DTO	外に出す　　　　データの形
+⑦ 例外処理	　　　　共通でまとめて行う
+
+
