@@ -1,0 +1,13 @@
+# ?????????? (?????)
+spring.datasource.url=jdbc:postgresql://localhost:5432/todo_db
+spring.datasource.username=todo_user
+spring.datasource.password=todo_password
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# JPA/Hibernate ?? (?????)
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+# Solr????
+solr.host=http://localhost:8983/solr

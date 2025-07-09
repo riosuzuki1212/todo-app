@@ -1,25 +1,26 @@
 package com.example.todoapp.controller;
 
-import com.example.todoapp.entity.Todo; // ToDoの情報の型を使う
-import com.example.todoapp.repository.TodoRepository; // データベースとやり取りするための変数
+// ... 既存のimport文 ...
+import com.example.todoapp.entity.Todo;
 import com.example.todoapp.model.SolrTodoItem; // Solr用のToDoアイテムの型を使う
+import com.example.todoapp.repository.TodoRepository;
 import com.example.todoapp.service.SolrTodoService; // Solrとやり取りするための変数
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus; // HTTPステータスコードを返すため
 import org.springframework.http.ResponseEntity; // HTTPレスポンス全体を操作するため
-import org.springframework.stereotype.Controller; // HTML画面を返すコントローラー
-import org.springframework.ui.Model; // 画面にデータを渡すための変数
-import org.springframework.web.bind.annotation.*; // URLやリクエストに使うクラス
 
 import java.io.IOException; // I/Oエラーを扱うため
 import java.util.List; // リストを扱うため
 import java.util.Optional; // nullチェックのため
 import java.util.Date; // 日時を扱うため
 import org.apache.solr.client.solrj.SolrServerException; // Solrサーバーエラーを扱うため
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller; // HTML画面を返すコントローラー
+import org.springframework.ui.Model; // 画面にデータを渡すための変数
+import org.springframework.web.bind.annotation.*; // URLやリクエストに使うクラス
 
 
 @Controller
-@RequestMapping
+@RequestMapping // Controllerレベルでパスを指定しないことで、メソッドレベルで柔軟にパスを設定
 public class TodoController {
 
     private final TodoRepository todoRepository;
@@ -65,14 +66,13 @@ public class TodoController {
     // ④ ToDoの削除（画面リロードあり）
     @PostMapping("/delete/{id}")
     public String deleteTodo(@PathVariable Long id) {
-
         todoRepository.deleteById(id);
         return "redirect:/";
     }
 
     // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
-    // ↓↓↓ ここからは AJAX を使うための処理 ↓↓↓
-    // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+    // ↓↓↓ ここからは AJAX を使うための処理
+    // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 
     // ⑤ AJAX用：ToDo一覧を返す（JSON形式） - データベースから全件取得
     @GetMapping("/api/todos")
@@ -92,7 +92,6 @@ public class TodoController {
             todo.setUpdatedAt(new Date());
             Todo savedTodo = todoRepository.save(todo);
 
-            // Solr連携はここで行われている
             solrTodoService.indexTodoItem(convertToSolrTodoItem(savedTodo));
 
             return new ResponseEntity<>(savedTodo, HttpStatus.CREATED);
@@ -117,7 +116,6 @@ public class TodoController {
             todo.setUpdatedAt(new Date());
             Todo updatedTodo = todoRepository.save(todo);
 
-            // Solr連携はここで行われている
             solrTodoService.indexTodoItem(convertToSolrTodoItem(updatedTodo));
 
             return new ResponseEntity<>(updatedTodo, HttpStatus.OK);
@@ -137,7 +135,6 @@ public class TodoController {
             }
             todoRepository.deleteById(id);
 
-            // Solr連携はここで行われている
             solrTodoService.deleteTodoItem(String.valueOf(id));
 
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -147,7 +144,31 @@ public class TodoController {
         }
     }
 
-    // ★ ヘルパーメソッド (convertToSolrTodoItem)
+    // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+    // ↓↓↓ Solr検索のための新しいエンドポイント ↓↓↓
+    // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+
+    // ⑨ AJAX用：SolrでToDoを検索する (title_s フィールドを使用)
+    @GetMapping("/api/todos/search") // ★パスを変更せず、検索クエリパラメータで制御
+    @ResponseBody
+    public ResponseEntity<List<SolrTodoItem>> searchTodos(
+            @RequestParam String q, // 検索クエリ（例: q=キーワード）
+            @RequestParam(defaultValue = "0") int start,
+            @RequestParam(defaultValue = "10") int rows) {
+        try {
+            // qパラメータを使って title_s フィールドを検索
+            List<SolrTodoItem> results = solrTodoService.searchTodoItems("title_s:" + q, start, rows); // ★検索クエリを title_s に指定
+            return new ResponseEntity<>(results, HttpStatus.OK);
+        } catch (IOException | SolrServerException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+    // ↓↓↓ ヘルパーメソッド (エンティティとSolrモデルの変換) ↓↓↓
+    // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+
     private SolrTodoItem convertToSolrTodoItem(Todo todo) {
         SolrTodoItem solrItem = new SolrTodoItem(
                 String.valueOf(todo.getId()),
@@ -157,7 +178,7 @@ public class TodoController {
                 todo.getCreatedAt(),
                 todo.getUpdatedAt()
         );
-
+        solrItem.setTitleExact(todo.getTitle()); // title_s 用の値を設定
         return solrItem;
     }
 }

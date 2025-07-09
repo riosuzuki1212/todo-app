@@ -25,10 +25,8 @@ public class SolrTodoItem {
     @Field("updatedAt") // 更新日時
     private Date updatedAt;
 
-    // -------------------------
-    @Field("title_s") // 単一値のタイトル (検索表示用)
+    @Field("title_s") // ★単一値のタイトル (検索表示用)
     private String titleExact;
-// ----------------------------------
 
     public SolrTodoItem(String id, String title, String description, Boolean completed, Date createdAt, Date updatedAt) {}
 
