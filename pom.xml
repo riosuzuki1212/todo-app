@@ -12,20 +12,16 @@
     <name>todoapp</name>
     <description>Simple Todo App with Spring Boot</description>
 
-    <!-- プロパティ -->
     <properties>
         <java.version>21</java.version>
     </properties>
 
-    <!-- 親定義：プロパティを使わず明記 -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.3.12</version>
-        <relativePath/> <!-- lookup parent from repository -->
-    </parent>
+        <relativePath/> </parent>
 
-    <!-- 依存関係 -->
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -44,15 +40,20 @@
             <artifactId>postgresql</artifactId>
             <version>42.7.5</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.solr</groupId>
+            <artifactId>solr-solrj</artifactId>
+            <version>9.8.1</version>
+        </dependency>
     </dependencies>
 
-    <!-- ビルドプラグイン（任意で追加） -->
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
+                <version>3.3.12</version> </plugin>
         </plugins>
     </build>
 
