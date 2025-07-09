@@ -5,6 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication; // 自動�
 
 @SpringBootApplication // Spring Bootのはここから始まる
 public class TodoApplication { // アプリの本体メインのクラス
+
+
     public static void main(String[] args) { // アプリをスタートするときにまずここが動く。main関数みたいなもの？
         SpringApplication.run(TodoApplication.class, args); // Spring Bootのエンジンを動かす
     }
