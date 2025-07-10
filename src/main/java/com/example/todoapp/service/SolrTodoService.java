@@ -12,7 +12,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Date;
-
+import java.util.ArrayList; // ArrayList が必要な場合のみインポート
+import org.apache.solr.common.SolrDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +23,7 @@ public class SolrTodoService {
     private static final Logger logger = LoggerFactory.getLogger(SolrTodoService.class);
 
     private final SolrClient solrClient;
-
+    // private static final String COLLECTION_NAME = "todo_items";
 
     public SolrTodoService(SolrClient solrClient) {
         this.solrClient = solrClient;
@@ -37,20 +38,20 @@ public class SolrTodoService {
         doc.addField("createdAt", todoItem.getCreatedAt());
         doc.addField("updatedAt", todoItem.getUpdatedAt());
 
-        doc.addField("title_s", todoItem.getTitleExact());
+        doc.addField("title_strnew", todoItem.getTitleExact());
 
         logger.info("Indexing document to Solr: {}", doc);
-
-        solrClient.add("/update", doc);
-        solrClient.commit("/update");
+        // SolrClient が既にコアのURLで構築されているため、ハンドラー名のみを渡す
+        solrClient.add(doc);
+        solrClient.commit();
         logger.info("Document indexed and committed successfully: ID {}", todoItem.getId());
     }
 
     public void deleteTodoItem(String id) throws IOException, SolrServerException {
         logger.info("Deleting document from Solr: ID {}", id);
-
-        solrClient.deleteById("/update", id);
-        solrClient.commit("/update");
+        // SolrClient が既にコアのURLで構築されているため、ハンドラー名のみを渡す
+        solrClient.deleteById(id);
+        solrClient.commit();
         logger.info("Document deleted and committed successfully: ID {}", id);
     }
 
@@ -60,12 +61,12 @@ public class SolrTodoService {
         solrQuery.setStart(start);
         solrQuery.setRows(rows);
 
-        String queryPath = "/select";
-        logger.info("SolrClient query will be executed with path: {}", queryPath);
+        //String queryPath = "/select";
+        //logger.info("SolrClient query will be executed with path: {}", queryPath);
         logger.info("SolrClient query SolrQuery object: {}", solrQuery.toString());
 
-
-        QueryResponse response = solrClient.query(queryPath, solrQuery);
+        // SolrClient が既にコアのURLで構築されているため、ハンドラー名のみを渡す
+        QueryResponse response = solrClient.query(solrQuery);
         logger.info("Solr query returned {} hits.", response.getResults().getNumFound());
 
         return response.getResults().stream()
@@ -86,7 +87,7 @@ public class SolrTodoService {
                             updatedAt
                     );
 
-                    Object titleExactValue = doc.getFieldValue("title_s");
+                    Object titleExactValue = doc.getFieldValue("title_strnew");
                     if (titleExactValue instanceof List) {
                         if (!((List<?>) titleExactValue).isEmpty()) {
                             item.setTitleExact(((List<?>) titleExactValue).get(0).toString());
@@ -103,7 +104,7 @@ public class SolrTodoService {
                 .collect(Collectors.toList());
     }
 
-    // ヘルパーメソッド群
+    // ヘルパーメソッド群 (変更なし)
     private String getStringValue(Object value) {
         if (value == null) {
             return null;

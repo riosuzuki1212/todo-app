@@ -25,8 +25,8 @@ public class SolrTodoItem {
     @Field("updatedAt") // 更新日時
     private Date updatedAt;
 
-    @Field("title_s") // ★単一値のタイトル (検索表示用)
-    private String titleExact;
+    @Field("title_strnew") // ★単一値のタイトル (検索表示用)
+    private String titlestrnew;
 
     public SolrTodoItem(String id, String title, String description, Boolean completed, Date createdAt, Date updatedAt) {}
 
@@ -38,7 +38,7 @@ public class SolrTodoItem {
         this.completed = completed;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.titleExact = title; // コンストラクタで titleExact も初期化
+        this.titlestrnew = title; // コンストラクタで titleExact も初期化
     }
 
     // Getters and Setters
@@ -55,6 +55,6 @@ public class SolrTodoItem {
     public Date getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(Date updatedAt) { this.updatedAt = updatedAt; }
 
-    public String getTitleExact() { return titleExact; }
-    public void setTitleExact(String titleExact) { this.titleExact = titleExact; }
+    public String getTitleExact() { return titlestrnew; }
+    public void setTitleExact(String titleExact) { this.titlestrnew = titleExact; }
 }
