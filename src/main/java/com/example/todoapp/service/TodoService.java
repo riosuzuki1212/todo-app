@@ -103,7 +103,8 @@ public class TodoService {
                 todo.getDescription(),
                 todo.isCompleted(),
                 todo.getCreatedAt(),
-                todo.getUpdatedAt()
+                todo.getUpdatedAt(),
+                todo.getTitle()
         );
         // Solrの単一値フィールド（title_s）にタイトルをコピー
         solrItem.setTitleExact(todo.getTitle()); //

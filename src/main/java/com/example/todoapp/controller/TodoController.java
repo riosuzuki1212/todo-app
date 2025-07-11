@@ -176,7 +176,8 @@ public class TodoController {
                 todo.getDescription(),
                 todo.isCompleted(),
                 todo.getCreatedAt(),
-                todo.getUpdatedAt()
+                todo.getUpdatedAt(),
+                todo.getTitle()
         );
         solrItem.setTitleExact(todo.getTitle()); // title_s 用の値を設定
         return solrItem;
