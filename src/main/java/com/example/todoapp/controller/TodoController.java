@@ -157,10 +157,12 @@ public class TodoController {
             @RequestParam(defaultValue = "10") int rows) {
         try {
             // qパラメータを使って title_s フィールドを検索
-            List<SolrTodoItem> results = solrTodoService.searchTodoItems("title_strnew:*" + q + "*", start, rows);
+            List<SolrTodoItem> results = solrTodoService.searchTodoItems("title_strnew:" + q , start, rows);
             return new ResponseEntity<>(results, HttpStatus.OK);
         } catch (IOException | SolrServerException e) {
+
             e.printStackTrace();
+
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

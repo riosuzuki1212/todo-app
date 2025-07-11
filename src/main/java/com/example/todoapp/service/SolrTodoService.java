@@ -73,8 +73,9 @@ public class SolrTodoService {
 
 
         if (query != null && !query.trim().isEmpty()) {
-            solrQuery.setQuery(ClientUtils.escapeQueryChars(query));
-            solrQuery.set("defType", "edismax");
+            solrQuery.setQuery(query); // クエリが空でない場合はそのまま設定
+            solrQuery.set("defType", "edismax"); // edismaxクエリタイプを使用
+            solrQuery.set("q.op", "AND"); // AND条件で検索
             solrQuery.set("qf", "title_strnew description"); // title_strnew と description の両方で検索
         } else {
             solrQuery.setQuery("*:*"); // クエリが空の場合は全件検索
